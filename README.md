@@ -110,7 +110,27 @@ void BarGraphEuDataSelection::updateEuItemsOrder(bool moveUp)
                 // Move item up
                 QTableWidgetItem* item = this->ui.barGraphParameterTableWidget->takeItem(currentRow-1, i);
                 qlQTableWidgetItem.append(item);
-                //ui.barGraphParameterTableWidget->removeRow(currentRow);
+                //ui.barGraphParameterTableWidget->removeRow(currentRow);void BarGraphEuDataSelection::updateEuItemsOrder(
+
+    // Boundary conditions
+    if ((moveUp && currentRow <= 0) || (!moveUp && currentRow >= rowCount - 1))
+        return;
+
+    int targetRow = moveUp ? currentRow - 1 : currentRow + 1;
+
+    // Swap entire row contents
+    for (int col = 0; col < columnCount; ++col) {
+        QTableWidgetItem *currentItem = table->takeItem(currentRow, col);
+        QTableWidgetItem *targetItem = table->takeItem(targetRow, col);
+
+        table->setItem(currentRow, col, targetItem);
+        table->setItem(targetRow, col, currentItem);
+    }
+
+    // Select the moved row
+    table->selectRow(targetRow);
+}
+
 
 
                 //QTableWidgetItem* tempItem = item->clone();
@@ -142,6 +162,29 @@ void BarGraphEuDataSelection::updateEuItemsOrder(bool moveUp)
             this->ui.barGraphParameterTableWidget->setItem(currentRow, 0, itemBelow);
 
             // Select the new current row
-            this->ui.barGraphParameterTableWidget->selectRow(currentRow + 1);
-        }
+
+void BarGraphEuDataSelection::updateEuItemsOrder(bool moveUp) {
+    QTableWidget *table = this->ui.barGraphParameterTableWidget;
+    int currentRow = table->currentRow();
+    int columnCount = table->columnCount();
+    int rowCount = table->rowCount();
+
+    // Boundary conditions
+    if ((moveUp && currentRow <= 0) || (!moveUp && currentRow >= rowCount - 1))
+        return;
+
+    int targetRow = moveUp ? currentRow - 1 : currentRow + 1;
+
+    // Swap entire row contents
+    for (int col = 0; col < columnCount; ++col) {
+        QTableWidgetItem *currentItem = table->takeItem(currentRow, col);
+        QTableWidgetItem *targetItem = table->takeItem(targetRow, col);
+
+        table->setItem(currentRow, col, targetItem);
+        table->setItem(targetRow, col, currentItem);
+    }
+
+    // Select the moved row
+    table->selectRow(targetRow);
 }
+
